@@ -1,0 +1,586 @@
+~ ❯ mysql-console
+[sudo] password for miles:
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 16
+Server version: 12.1.2-MariaDB Arch Linux
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> -- =======================================================
+MariaDB [(none)]> -- CREATE DATABASE
+4MariaDB [(none)]> -- =======================================================
+MariaDB [(none)]> DROP DATABASE IF EXISTS companyDB;
+Query OK, 0 rows affected, 1 warning (0.000 sec)
+
+MariaDB [(none)]> CREATE DATABASE companyDB;
+Query OK, 1 row affected (0.001 sec)
+
+MariaDB [(none)]> USE companyDB;
+Database changed
+MariaDB [companyDB]>
+MariaDB [companyDB]> -- =======================================================
+MariaDB [companyDB]> -- TABLES
+MariaDB [companyDB]> -- =======================================================
+MariaDB [companyDB]>
+MariaDB [companyDB]> -- DEPARTMENT ------------------------------------------------
+MariaDB [companyDB]> CREATE TABLE Department (
+    ->     Dname       VARCHAR(50),
+    ->     Dnum        INT PRIMARY KEY,
+    ->     MGRSSN      CHAR(9),
+    ->     MGRStartDate DATE
+    -> );
+Query OK, 0 rows affected (0.038 sec)
+
+MariaDB [companyDB]>
+MariaDB [companyDB]> -- EMPLOYEE -------------------------------------------------
+MariaDB [companyDB]> CREATE TABLE Employee (
+    ->     Fname     VARCHAR(20),
+    ->     Lname     VARCHAR(20),
+    ->     SSN       CHAR(9) PRIMARY KEY,
+    ->     Bdate     DATE,
+    ->     Addresss  VARCHAR(200),
+    ->     Sex       CHAR(1),
+    ->     Salary    INT,
+    ->     Superssn  CHAR(9),
+    ->     Dno       INT,
+    ->     FOREIGN KEY (Dno) REFERENCES Department(Dnum),
+    ->     FOREIGN KEY (Superssn) REFERENCES Employee(SSN)
+    -> );
+Query OK, 0 rows affected (0.038 sec)
+
+MariaDB [companyDB]>
+MariaDB [companyDB]> -- PROJECT ---------------------------------------------------
+MariaDB [companyDB]> CREATE TABLE Project (
+    ->     Pname      VARCHAR(50),
+    ->     Pnumber    INT PRIMARY KEY,
+    ->     Plocation  VARCHAR(100),
+    ->     City       VARCHAR(50),
+    ->     Dnum       INT,
+    ->     FOREIGN KEY (Dnum) REFERENCES Department(Dnum)
+    -> );
+Query OK, 0 rows affected (0.029 sec)
+
+MariaDB [companyDB]>
+MariaDB [companyDB]> -- WORKS_FOR -------------------------------------------------
+MariaDB [companyDB]> CREATE TABLE Works_for (
+    ->     ESSN   CHAR(9),
+    ->     Pno    INT,
+    ->     Hours  INT,
+    ->     FOREIGN KEY (ESSN) REFERENCES Employee(SSN),
+    ->     FOREIGN KEY (Pno) REFERENCES Project(Pnumber)
+    -> );
+Query OK, 0 rows affected (0.031 sec)
+
+MariaDB [companyDB]>
+MariaDB [companyDB]> -- DEPENDENT -------------------------------------------------
+MariaDB [companyDB]> CREATE TABLE Dependent (
+    ->     ESSN            CHAR(9),
+    ->     Dependent_name  VARCHAR(100),
+    ->     Sex             CHAR(1),
+    ->     Bdate           DATE,
+    ->     FOREIGN KEY (ESSN) REFERENCES Employee(SSN)
+    -> );
+Query OK, 0 rows affected (0.027 sec)
+
+MariaDB [companyDB]>
+MariaDB [companyDB]> -- =======================================================
+MariaDB [companyDB]> -- INSERT DATA
+MariaDB [companyDB]> -- =======================================================
+MariaDB [companyDB]>
+MariaDB [companyDB]> -- DEPARTMENT ------------------------------------------------
+MariaDB [companyDB]> INSERT INTO Department VALUES
+    -> ('DP1', 10, '223344', '2005-01-01'),
+    -> ('DP2', 20, '968574', '2006-03-01'),
+    -> ('DP3', 30, '512463', '2006-06-01');
+Query OK, 3 rows affected (0.003 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+MariaDB [companyDB]>
+MariaDB [companyDB]> -- EMPLOYEE --------------------------------------------------
+MariaDB [companyDB]> INSERT INTO Employee VALUES
+    -> ('Ahmed','Ali','112233','1965-01-01','15 Ali fahmy St.Giza','M',1300,'223344',10),
+    -> ('Kamel','Mohamed','223344','1970-10-15','38 Mohy el dien abo el Ezz St.Cairo','M',1800,'321654',10),
+    -> ('Hanaa','Sobhy','123456','1973-03-18','38 Abdel Khalik Tharwat St. Downtown.Cairo','F',800,'223344',10),
+    -> ('Amr','Omran','321654','1963-09-14','44 Hilopolis.Cairo','M',2500,NULL,NULL),
+    -> ('Noha','Mohamed','968574','1975-02-01','55 Orabi St. El Mohandiseen .Cairo','F',1600,'321654',20),
+    -> ('Edward','Hanna','512463','1972-08-19','18 Abaas El 3akaad St. Nasr City.Cairo','M',1500,'321654',30),
+    -> ('Mariam','Adel','669955','1982-06-12','269 El-Haram st. Giza','F',750,'512463',20),
+    -> ('Maged','Raoof','521634','1980-04-06','18 Kholosi st.Shobra.Cairo','M',1000,'968574',30);
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`companyDB`.`Employee`, CONSTRAINT `2` FOREIGN KEY (`Superssn`) REFERENCES `Employee` (`SSN`))
+MariaDB [companyDB]>
+MariaDB [companyDB]> -- PROJECT ----------------------------------------------------
+MariaDB [companyDB]> INSERT INTO Project VALUES
+    -> ('AL Solimaniah',100,'Cairo_Alex Road','Alex',10),
+    -> ('Al Rabwah',200,'6th of October City','Giza',10),
+    -> ('Al Rawdah',300,'Zaied City','Giza',10),
+    -> ('Al Rowad',400,'Cairo_Faiyom Road','Giza',20),
+    -> ('Al Rehab',500,'Nasr City','Cairo',30),
+    -> ('Pitcho american',600,'Maady','Cairo',30),
+    -> ('Ebad El Rahman',700,'Ring Road','Cairo',20);
+Query OK, 7 rows affected (0.006 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+MariaDB [companyDB]>
+MariaDB [companyDB]> -- WORKS_FOR --------------------------------------------------
+MariaDB [companyDB]> INSERT INTO Works_for VALUES
+    -> ('223344',100,10),
+    -> ('223344',200,10),
+    -> ('223344',300,10),
+    -> ('112233',100,40),
+    -> ('968574',400,15),
+    -> ('968574',700,15),
+    -> ('968574',300,10),
+    -> ('669955',400,20),
+    -> ('223344',500,10),
+    -> ('669955',700,7),
+    -> ('669955',300,10),
+    -> ('512463',500,10),
+    -> ('512463',600,25),
+    -> ('521634',500,10),
+    -> ('521634',600,20),
+    -> ('521634',300,6),
+    -> ('521634',400,4);
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`companyDB`.`Works_for`, CONSTRAINT `1` FOREIGN KEY (`ESSN`) REFERENCES `Employee` (`SSN`))
+MariaDB [companyDB]>
+MariaDB [companyDB]> -- DEPENDENT --------------------------------------------------
+MariaDB [companyDB]> INSERT INTO Dependent VALUES
+    -> ('112233','Hala Saied Ali','F','1970-10-18'),
+    -> ('223344','Ahmed Kamel Shawki','M','1998-03-27'),
+    -> ('223344','Mona Adel Mohamed','F','1975-04-25'),
+    -> ('321654','Ramy Amr Omran','M','1990-01-26'),
+    -> ('321654','Omar Amr Omran','M','1993-03-30'),
+    -> ('321654','Sanaa Gawish','F','1973-05-16'),
+    -> ('512463','Sara Edward','F','2001-09-15'),
+    -> ('512463','Nora Ghaly','F','1976-06-22');
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`companyDB`.`Dependent`, CONSTRAINT `1` FOREIGN KEY (`ESSN`) REFERENCES `Employee` (`SSN`))
+MariaDB [companyDB]>
+MariaDB [companyDB]> show table;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '' at line 1
+MariaDB [companyDB]> show tables;
++---------------------+
+| Tables_in_companyDB |
++---------------------+
+| Department          |
+| Dependent           |
+| Employee            |
+| Project             |
+| Works_for           |
++---------------------+
+5 rows in set (0.001 sec)
+
+MariaDB [companyDB]> select * from Department;
++-------+------+--------+--------------+
+| Dname | Dnum | MGRSSN | MGRStartDate |
++-------+------+--------+--------------+
+| DP1   |   10 | 223344 | 2005-01-01   |
+| DP2   |   20 | 968574 | 2006-03-01   |
+| DP3   |   30 | 512463 | 2006-06-01   |
++-------+------+--------+--------------+
+3 rows in set (0.001 sec)
+
+MariaDB [companyDB]> select * from Department;select * from employee;
++-------+------+--------+--------------+
+| Dname | Dnum | MGRSSN | MGRStartDate |
++-------+------+--------+--------------+
+| DP1   |   10 | 223344 | 2005-01-01   |
+| DP2   |   20 | 968574 | 2006-03-01   |
+| DP3   |   30 | 512463 | 2006-06-01   |
++-------+------+--------+--------------+
+3 rows in set (0.001 sec)
+
+ERROR 1146 (42S02): Table 'companyDB.employee' doesn't exist
+MariaDB [companyDB]> select * from Department;select * from Employee;
++-------+------+--------+--------------+
+| Dname | Dnum | MGRSSN | MGRStartDate |
++-------+------+--------+--------------+
+| DP1   |   10 | 223344 | 2005-01-01   |
+| DP2   |   20 | 968574 | 2006-03-01   |
+| DP3   |   30 | 512463 | 2006-06-01   |
++-------+------+--------+--------------+
+3 rows in set (0.001 sec)
+
+Empty set (0.000 sec)
+
+MariaDB [companyDB]> select * from Employee;
+Empty set (0.001 sec)
+
+MariaDB [companyDB]> INSERT INTO Employee VALUES
+    ->     -> ('Ahmed','Ali','112233','1965-01-01','15 Ali fahmy St.Giza','M',1300,'223344',10);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '-> ('Ahmed','Ali','112233','1965-01-01','15 Ali fahmy St.Giza','M',1300,'2233...' at line 2
+MariaDB [companyDB]> INSERT INTO Employee VALUES ('Ahmed','Ali','112233','1965-01-01','15 Ali fahmy St.Giza','M',1300,'223344',10)
+    -> ;
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`companyDB`.`Employee`, CONSTRAINT `2` FOREIGN KEY (`Superssn`) REFERENCES `Employee` (`SSN`))
+MariaDB [companyDB]> INSERT INTO Employee VALUES ('Ahmed','Ali','112233','1965-01-01','15 Ali fahmy St.Giza','M',1300,null,10)
+    -> ;
+Query OK, 1 row affected (0.011 sec)
+
+MariaDB [companyDB]> INSERT INTO Employee VALUES
+    -> ('Ahmed','Ali','112233','1965-01-01','15 Ali fahmy St.Giza','M',1300,'223344',10),
+    -> ('Kamel','Mohamed','223344','1970-10-15','38 Mohy el dien abo el Ezz St.Cairo','M',1800,'321654',10),
+    -> ('Hanaa','Sobhy','123456','1973-03-18','38 Abdel Khalik Tharwat St. Downtown.Cairo','F',800,'223344',10),
+    -> ('Amr','Omran','321654','1963-09-14','44 Hilopolis.Cairo','M',2500,NULL,NULL),
+    -> ('Noha','Mohamed','968574','1975-02-01','55 Orabi St. El Mohandiseen .Cairo','F',1600,'321654',20),
+    -> ('Edward','Hanna','512463','1972-08-19','18 Abaas El 3akaad St. Nasr City.Cairo','M',1500,'321654',30),
+    -> ('Mariam','Adel','669955','1982-06-12','269 El-Haram st. Giza','F',750,'512463',20),
+    -> ('Maged','Raoof','521634','1980-04-06','18 Kholosi st.Shobra.Cairo','M',1000,'968574',30);
+ERROR 1062 (23000): Duplicate entry '112233' for key 'PRIMARY'
+MariaDB [companyDB]> select * from Employee;
++-------+-------+--------+------------+----------------------+------+--------+----------+------+
+| Fname | Lname | SSN    | Bdate      | Addresss             | Sex  | Salary | Superssn | Dno  |
++-------+-------+--------+------------+----------------------+------+--------+----------+------+
+| Ahmed | Ali   | 112233 | 1965-01-01 | 15 Ali fahmy St.Giza | M    |   1300 | NULL     |   10 |
++-------+-------+--------+------------+----------------------+------+--------+----------+------+
+1 row in set (0.001 sec)
+
+MariaDB [companyDB]> delete from Employee where SSN = '112233';
+Query OK, 1 row affected (0.011 sec)
+
+MariaDB [companyDB]> select * from Employee;
+Empty set (0.001 sec)
+
+MariaDB [companyDB]> INSERT INTO Employee (Fname, Lname, SSN, BDATE, Addresss, Sex, Salary, Superssn, Dno) VALUES
+    -> ('Ahmed','Ali','112233','1965-01-01','15 Ali fahmy St.Giza','M',1300,NULL,10),
+    -> ('Kamel','Mohamed','223344','1970-10-15','38 Mohy el dien abo el Ezz St.Cairo','M',1800,NULL,10),
+    -> ('Hanaa','Sobhy','123456','1973-03-18','38 Abdel Khalik Tharwat St. Downtown.Cairo','F',800,NULL,10),
+    -> ('Amr','Omran','321654','1963-09-14','44 Hilopolis.Cairo','M',2500,NULL,NULL),
+    -> ('Noha','Mohamed','968574','1975-02-01','55 Orabi St. El Mohandiseen .Cairo','F',1600,NULL,20),
+    -> ('Edward','Hanna','512463','1972-08-19','18 Abaas El 3akaad St. Nasr City.Cairo','M',1500,NULL,30),
+    -> ('Mariam','Adel','669955','1982-06-12','269 El-Haram st. Giza','F',750,NULL,20),
+    -> ('Maged','Raoof','521634','1980-04-06','18 Kholosi st.Shobra.Cairo','M',1000,NULL,30);
+Query OK, 8 rows affected (0.012 sec)
+Records: 8  Duplicates: 0  Warnings: 0
+
+MariaDB [companyDB]> UPDATE Employee SET Superssn = '223344' WHERE SSN = '112233';
+Query OK, 1 row affected (0.011 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [companyDB]> UPDATE Employee SET Superssn = '321654' WHERE SSN = '223344';
+Query OK, 1 row affected (0.004 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [companyDB]> UPDATE Employee SET Superssn = '223344' WHERE SSN = '123456';
+Query OK, 1 row affected (0.005 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [companyDB]> -- Amr Omran (321654) has no supervisor (leave NULL)
+MariaDB [companyDB]> UPDATE Employee SET Superssn = '321654' WHERE SSN = '968574';
+Query OK, 1 row affected (0.004 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [companyDB]> UPDATE Employee SET Superssn = '321654' WHERE SSN = '512463';
+Query OK, 1 row affected (0.004 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [companyDB]> UPDATE Employee SET Superssn = '512463' WHERE SSN = '669955';
+Query OK, 1 row affected (0.004 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [companyDB]> UPDATE Employee SET Superssn = '968574' WHERE SSN = '521634';
+Query OK, 1 row affected (0.004 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [companyDB]> select * from Employee;
++--------+---------+--------+------------+--------------------------------------------+------+--------+----------+------+
+| Fname  | Lname   | SSN    | Bdate      | Addresss                                   | Sex  | Salary | Superssn | Dno  |
++--------+---------+--------+------------+--------------------------------------------+------+--------+----------+------+
+| Ahmed  | Ali     | 112233 | 1965-01-01 | 15 Ali fahmy St.Giza                       | M    |   1300 | 223344   |   10 |
+| Hanaa  | Sobhy   | 123456 | 1973-03-18 | 38 Abdel Khalik Tharwat St. Downtown.Cairo | F    |    800 | 223344   |   10 |
+| Kamel  | Mohamed | 223344 | 1970-10-15 | 38 Mohy el dien abo el Ezz St.Cairo        | M    |   1800 | 321654   |   10 |
+| Amr    | Omran   | 321654 | 1963-09-14 | 44 Hilopolis.Cairo                         | M    |   2500 | NULL     | NULL |
+| Edward | Hanna   | 512463 | 1972-08-19 | 18 Abaas El 3akaad St. Nasr City.Cairo     | M    |   1500 | 321654   |   30 |
+| Maged  | Raoof   | 521634 | 1980-04-06 | 18 Kholosi st.Shobra.Cairo                 | M    |   1000 | 968574   |   30 |
+| Mariam | Adel    | 669955 | 1982-06-12 | 269 El-Haram st. Giza                      | F    |    750 | 512463   |   20 |
+| Noha   | Mohamed | 968574 | 1975-02-01 | 55 Orabi St. El Mohandiseen .Cairo         | F    |   1600 | 321654   |   20 |
++--------+---------+--------+------------+--------------------------------------------+------+--------+----------+------+
+8 rows in set (0.001 sec)
+
+MariaDB [companyDB]> INSERT INTO Employee ('Arsany','Ashraf',102672,'2002-12-16','mansheyt elbakry','M',1234,112233,30);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ''Arsany','Ashraf',102672,'2002-12-16','mansheyt elbakry','M',1234,112233,30)' at line 1
+MariaDB [companyDB]> INSERT INTO Employee values ('Arsany','Ashraf',102672,'2002-12-16','mansheyt elbakry','M',1234,112233,30);
+Query OK, 1 row affected (0.011 sec)
+
+MariaDB [companyDB]> select * from Employee;
++--------+---------+--------+------------+--------------------------------------------+------+--------+----------+------+
+| Fname  | Lname   | SSN    | Bdate      | Addresss                                   | Sex  | Salary | Superssn | Dno  |
++--------+---------+--------+------------+--------------------------------------------+------+--------+----------+------+
+| Arsany | Ashraf  | 102672 | 2002-12-16 | mansheyt elbakry                           | M    |   1234 | 112233   |   30 |
+| Ahmed  | Ali     | 112233 | 1965-01-01 | 15 Ali fahmy St.Giza                       | M    |   1300 | 223344   |   10 |
+| Hanaa  | Sobhy   | 123456 | 1973-03-18 | 38 Abdel Khalik Tharwat St. Downtown.Cairo | F    |    800 | 223344   |   10 |
+| Kamel  | Mohamed | 223344 | 1970-10-15 | 38 Mohy el dien abo el Ezz St.Cairo        | M    |   1800 | 321654   |   10 |
+| Amr    | Omran   | 321654 | 1963-09-14 | 44 Hilopolis.Cairo                         | M    |   2500 | NULL     | NULL |
+| Edward | Hanna   | 512463 | 1972-08-19 | 18 Abaas El 3akaad St. Nasr City.Cairo     | M    |   1500 | 321654   |   30 |
+| Maged  | Raoof   | 521634 | 1980-04-06 | 18 Kholosi st.Shobra.Cairo                 | M    |   1000 | 968574   |   30 |
+| Mariam | Adel    | 669955 | 1982-06-12 | 269 El-Haram st. Giza                      | F    |    750 | 512463   |   20 |
+| Noha   | Mohamed | 968574 | 1975-02-01 | 55 Orabi St. El Mohandiseen .Cairo         | F    |   1600 | 321654   |   20 |
++--------+---------+--------+------------+--------------------------------------------+------+--------+----------+------+
+9 rows in set (0.001 sec)
+
+MariaDB [companyDB]> INSERT INTO Employee values ('Amr','Shoukry',102660,'2002-12-16','somewhere','M',null,null,30);
+Query OK, 1 row affected (0.011 sec)
+
+MariaDB [companyDB]> SELECT * FROM Department;
++-------+------+--------+--------------+
+| Dname | Dnum | MGRSSN | MGRStartDate |
++-------+------+--------+--------------+
+| DP1   |   10 | 223344 | 2005-01-01   |
+| DP2   |   20 | 968574 | 2006-03-01   |
+| DP3   |   30 | 512463 | 2006-06-01   |
++-------+------+--------+--------------+
+3 rows in set (0.001 sec)
+
+MariaDB [companyDB]> INSERT INTO Department VALUES ('DEPT IT',100,112233,'2006-01-11');
+Query OK, 1 row affected (0.004 sec)
+
+MariaDB [companyDB]> ALTER TABLE Department
+    -> ;
+Query OK, 0 rows affected (0.000 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [companyDB]> UPDATE Department
+    -> SET MGRSSN = 968574 where Dnum=100;
+Query OK, 1 row affected (0.011 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [companyDB]> UPDATE Department SET MGRSSN = 102672 where Dnum=20;
+Query OK, 1 row affected (0.011 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [companyDB]> select * from Department;
++---------+------+--------+--------------+
+| Dname   | Dnum | MGRSSN | MGRStartDate |
++---------+------+--------+--------------+
+| DP1     |   10 | 223344 | 2005-01-01   |
+| DP2     |   20 | 102672 | 2006-03-01   |
+| DP3     |   30 | 512463 | 2006-06-01   |
+| DEPT IT |  100 | 968574 | 2006-01-11   |
++---------+------+--------+--------------+
+4 rows in set (0.001 sec)
+
+MariaDB [companyDB]> Update Employee set Sno=20 where SSN=102660;
+ERROR 1054 (42S22): Unknown column 'Sno' in 'SET'
+MariaDB [companyDB]> Update Employee set Dno=20 where SSN=102660;
+Query OK, 1 row affected (0.011 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [companyDB]> select * from Employee;
++--------+---------+--------+------------+--------------------------------------------+------+--------+----------+------+
+| Fname  | Lname   | SSN    | Bdate      | Addresss                                   | Sex  | Salary | Superssn | Dno  |
++--------+---------+--------+------------+--------------------------------------------+------+--------+----------+------+
+| Amr    | Shoukry | 102660 | 2002-12-16 | somewhere                                  | M    |   NULL | NULL     |   20 |
+| Arsany | Ashraf  | 102672 | 2002-12-16 | mansheyt elbakry                           | M    |   1234 | 112233   |   30 |
+| Ahmed  | Ali     | 112233 | 1965-01-01 | 15 Ali fahmy St.Giza                       | M    |   1300 | 223344   |   10 |
+| Hanaa  | Sobhy   | 123456 | 1973-03-18 | 38 Abdel Khalik Tharwat St. Downtown.Cairo | F    |    800 | 223344   |   10 |
+| Kamel  | Mohamed | 223344 | 1970-10-15 | 38 Mohy el dien abo el Ezz St.Cairo        | M    |   1800 | 321654   |   10 |
+| Amr    | Omran   | 321654 | 1963-09-14 | 44 Hilopolis.Cairo                         | M    |   2500 | NULL     | NULL |
+| Edward | Hanna   | 512463 | 1972-08-19 | 18 Abaas El 3akaad St. Nasr City.Cairo     | M    |   1500 | 321654   |   30 |
+| Maged  | Raoof   | 521634 | 1980-04-06 | 18 Kholosi st.Shobra.Cairo                 | M    |   1000 | 968574   |   30 |
+| Mariam | Adel    | 669955 | 1982-06-12 | 269 El-Haram st. Giza                      | F    |    750 | 512463   |   20 |
+| Noha   | Mohamed | 968574 | 1975-02-01 | 55 Orabi St. El Mohandiseen .Cairo         | F    |   1600 | 321654   |   20 |
++--------+---------+--------+------------+--------------------------------------------+------+--------+----------+------+
+10 rows in set (0.001 sec)
+
+MariaDB [companyDB]> Update employee set Dno=20 where SSN=102672;
+ERROR 1146 (42S02): Table 'companyDB.employee' doesn't exist
+MariaDB [companyDB]> Update Employee set Dno=20 where SSN=102672;
+Query OK, 1 row affected (0.012 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [companyDB]> Update Employee set Dno=100 where SSN=1968574;
+Query OK, 0 rows affected (0.001 sec)
+Rows matched: 0  Changed: 0  Warnings: 0
+
+MariaDB [companyDB]> Update Employee set Dno=100 where SSN=968574;
+Query OK, 1 row affected (0.011 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [companyDB]>
+MariaDB [companyDB]>
+MariaDB [companyDB]> asdf
+    ->
+    ->
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'asdf' at line 1
+MariaDB [companyDB]> ^C
+MariaDB [companyDB]> Update Employee set Superssn=UPDATE Employee
+    -> SET Superssn = NULL
+    -> WHERE Superssn = '223344';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'UPDATE Employee
+SET Superssn = NULL
+WHERE Superssn = '223344'' at line 1
+MariaDB [companyDB]>
+MariaDB [companyDB]> DELETE FROM Works_for
+    -> WHERE ESSN = '223344';
+Query OK, 0 rows affected (0.000 sec)
+
+MariaDB [companyDB]>
+MariaDB [companyDB]> DELETE FROM Dependent
+    -> WHERE ESSN = '223344';
+Query OK, 0 rows affected (0.000 sec)
+
+MariaDB [companyDB]>
+MariaDB [companyDB]> DELETE FROM Employee
+    -> WHERE SSN = '223344';
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`companyDB`.`Employee`, CONSTRAINT `2` FOREIGN KEY (`Superssn`) REFERENCES `Employee` (`SSN`))
+MariaDB [companyDB]> Update Employee set Superssn=UPDATE Employee
+    -> SET Superssn = NULL
+    -> WHERE Superssn = '223344';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'UPDATE Employee
+SET Superssn = NULL
+WHERE Superssn = '223344'' at line 1
+MariaDB [companyDB]>
+MariaDB [companyDB]> DELETE FROM Works_for
+    -> WHERE ESSN = '223344';
+Query OK, 0 rows affected (0.000 sec)
+
+MariaDB [companyDB]>
+MariaDB [companyDB]> DELETE FROM Dependent
+    -> WHERE ESSN = '223344';
+Query OK, 0 rows affected (0.001 sec)
+
+MariaDB [companyDB]>
+MariaDB [companyDB]> DELETE FROM Employee
+    -> WHERE SSN = '223344';
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`companyDB`.`Employee`, CONSTRAINT `2` FOREIGN KEY (`Superssn`) REFERENCES `Employee` (`SSN`))
+MariaDB [companyDB]> ^C
+MariaDB [companyDB]> Select * from Employee;
++--------+---------+--------+------------+--------------------------------------------+------+--------+----------+------+
+| Fname  | Lname   | SSN    | Bdate      | Addresss                                   | Sex  | Salary | Superssn | Dno  |
++--------+---------+--------+------------+--------------------------------------------+------+--------+----------+------+
+| Amr    | Shoukry | 102660 | 2002-12-16 | somewhere                                  | M    |   NULL | NULL     |   20 |
+| Arsany | Ashraf  | 102672 | 2002-12-16 | mansheyt elbakry                           | M    |   1234 | 112233   |   20 |
+| Ahmed  | Ali     | 112233 | 1965-01-01 | 15 Ali fahmy St.Giza                       | M    |   1300 | 223344   |   10 |
+| Hanaa  | Sobhy   | 123456 | 1973-03-18 | 38 Abdel Khalik Tharwat St. Downtown.Cairo | F    |    800 | 223344   |   10 |
+| Kamel  | Mohamed | 223344 | 1970-10-15 | 38 Mohy el dien abo el Ezz St.Cairo        | M    |   1800 | 321654   |   10 |
+| Amr    | Omran   | 321654 | 1963-09-14 | 44 Hilopolis.Cairo                         | M    |   2500 | NULL     | NULL |
+| Edward | Hanna   | 512463 | 1972-08-19 | 18 Abaas El 3akaad St. Nasr City.Cairo     | M    |   1500 | 321654   |   30 |
+| Maged  | Raoof   | 521634 | 1980-04-06 | 18 Kholosi st.Shobra.Cairo                 | M    |   1000 | 968574   |   30 |
+| Mariam | Adel    | 669955 | 1982-06-12 | 269 El-Haram st. Giza                      | F    |    750 | 512463   |   20 |
+| Noha   | Mohamed | 968574 | 1975-02-01 | 55 Orabi St. El Mohandiseen .Cairo         | F    |   1600 | 321654   |  100 |
++--------+---------+--------+------------+--------------------------------------------+------+--------+----------+------+
+10 rows in set (0.001 sec)
+
+MariaDB [companyDB]> Update Employee set Superssn=102660 where Superssn=223344;
+Query OK, 2 rows affected (0.011 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+
+MariaDB [companyDB]> Update Works_for set ESSN=102550 where ESSN=223344;
+Query OK, 0 rows affected (0.000 sec)
+Rows matched: 0  Changed: 0  Warnings: 0
+
+MariaDB [companyDB]> select * from Works_for
+    -> ;
+Empty set (0.000 sec)
+
+MariaDB [companyDB]> show Tables;
++---------------------+
+| Tables_in_companyDB |
++---------------------+
+| Department          |
+| Dependent           |
+| Employee            |
+| Project             |
+| Works_for           |
++---------------------+
+5 rows in set (0.001 sec)
+
+MariaDB [companyDB]> select * From Works_for;
+Empty set (0.000 sec)
+
+MariaDB [companyDB]> INSERT INTO Works_for VALUES
+    -> ('223344',100,10),
+    -> ('223344',200,10),
+    -> ('223344',300,10),
+    -> ('112233',100,40),
+    -> ('968574',400,15),
+    -> ('968574',700,15),
+    -> ('968574',300,10),
+    -> ('669955',400,20),
+    -> ('223344',500,10),
+    -> ('669955',700,7),
+    -> ('669955',300,10),
+    -> ('512463',500,10),
+    -> ('512463',600,25),
+    -> ('521634',500,10),
+    -> ('521634',600,20),
+    -> ('521634',300,6),
+    -> ('521634',400,4);
+Query OK, 17 rows affected (0.015 sec)
+Records: 17  Duplicates: 0  Warnings: 0
+
+MariaDB [companyDB]> Update Employee set Superssn=102660 where Superssn=223344;
+Query OK, 0 rows affected (0.001 sec)
+Rows matched: 0  Changed: 0  Warnings: 0
+
+MariaDB [companyDB]> Update Employee set ESSN=102660 where ESSN=223344;
+ERROR 1054 (42S22): Unknown column 'ESSN' in 'SET'
+MariaDB [companyDB]> select * from Works_for;
++--------+------+-------+
+| ESSN   | Pno  | Hours |
++--------+------+-------+
+| 223344 |  100 |    10 |
+| 223344 |  200 |    10 |
+| 223344 |  300 |    10 |
+| 112233 |  100 |    40 |
+| 968574 |  400 |    15 |
+| 968574 |  700 |    15 |
+| 968574 |  300 |    10 |
+| 669955 |  400 |    20 |
+| 223344 |  500 |    10 |
+| 669955 |  700 |     7 |
+| 669955 |  300 |    10 |
+| 512463 |  500 |    10 |
+| 512463 |  600 |    25 |
+| 521634 |  500 |    10 |
+| 521634 |  600 |    20 |
+| 521634 |  300 |     6 |
+| 521634 |  400 |     4 |
++--------+------+-------+
+17 rows in set (0.001 sec)
+
+MariaDB [companyDB]> Update Works_for set ESSN=102660 where ESSN=223344;
+Query OK, 4 rows affected (0.011 sec)
+Rows matched: 4  Changed: 4  Warnings: 0
+
+MariaDB [companyDB]> Delete From Dependent where ESSN=223344;
+Query OK, 0 rows affected (0.001 sec)
+
+MariaDB [companyDB]> select * from Dependent
+    -> ;
+Empty set (0.000 sec)
+
+MariaDB [companyDB]> INSERT INTO Dependent VALUES
+    -> ('112233','Hala Saied Ali','F','1970-10-18'),
+    -> ('223344','Ahmed Kamel Shawki','M','1998-03-27'),
+    -> ('223344','Mona Adel Mohamed','F','1975-04-25'),
+    -> ('321654','Ramy Amr Omran','M','1990-01-26'),
+    -> ('321654','Omar Amr Omran','M','1993-03-30'),
+    -> ('321654','Sanaa Gawish','F','1973-05-16'),
+    -> ('512463','Sara Edward','F','2001-09-15'),
+    -> ('512463','Nora Ghaly','F','1976-06-22');
+Query OK, 8 rows affected (0.012 sec)
+Records: 8  Duplicates: 0  Warnings: 0
+
+MariaDB [companyDB]> Delete From Dependent where ESSN=223344;
+Query OK, 2 rows affected (0.011 sec)
+
+MariaDB [companyDB]> Select * from Department;
++---------+------+--------+--------------+
+| Dname   | Dnum | MGRSSN | MGRStartDate |
++---------+------+--------+--------------+
+| DP1     |   10 | 223344 | 2005-01-01   |
+| DP2     |   20 | 102672 | 2006-03-01   |
+| DP3     |   30 | 512463 | 2006-06-01   |
+| DEPT IT |  100 | 968574 | 2006-01-11   |
++---------+------+--------+--------------+
+4 rows in set (0.001 sec)
+
+MariaDB [companyDB]> Update Department set MGRSSN=102660 where MGRSSN=223344;
+Query OK, 1 row affected (0.011 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [companyDB]> Delete from Employee where SSN=223344;
+Query OK, 1 row affected (0.011 sec)
+
+MariaDB [companyDB]>

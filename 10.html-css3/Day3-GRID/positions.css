@@ -1,0 +1,56 @@
+/* default position */
+/* no left right top bottom */
+.static-position {
+  background-color: red;
+  padding: 5px;
+  width: 300px;
+  position: static;
+}
+
+/* top + left(dir)  */
+.relative-position {
+  background-color: blue;
+  width: 700px;
+  height: 500px;
+  position: relative;
+}
+
+/* related to nearest relative */
+.absolute-position {
+  width: 100px;
+  height: 100px;
+  background-color: yellow;
+}
+.absolute-position-2 {
+  width: 100px;
+  height: 100px;
+  background-color: pink;
+  position: absolute;
+  z-index: 4;
+  left: 55px;
+}
+
+.fixed-position {
+  background-color: greenyellow;
+  padding: 25px;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  left: 0;
+}
+
+
+
+.sticky-position{
+    height: 300px;
+    width: 200px;
+    background-color: orange;
+    overflow-y: scroll;
+}
+
+/* fixed at any position when hide */
+.sticky{
+    background-color: red;
+    position: sticky;
+    top:0
+}

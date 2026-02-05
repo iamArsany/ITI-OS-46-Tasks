@@ -1,0 +1,90 @@
+/* from 0 to max = 567px */
+@media screen and (max-width: 567px) {
+  body {
+    background-color: red;
+  }
+}
+
+@media screen and (min-width: 900px) {
+  body {
+    background-color: blue;
+  }
+}
+
+@media (min-width: 900px) {
+  body {
+    background-color: blue;
+  }
+}
+
+from
+  600px
+  to
+  800px
+  @media
+  screen
+  and
+  (min-width: 600px)
+  and
+  (max-width: 800px) {
+  body {
+    background-color: orange;
+  }
+  h1 {
+    color: blue;
+  }
+}
+
+/* break pints */
+/* 0 -> 576px */
+/* 576px -> 776px */
+/* 776px -> 992 px */
+/* 992px -> infinity */
+
+:root {
+  --mainColor: rgb(193, 87, 87);
+}
+
+body {
+  background-color: var(--mainColor);
+}
+
+button {
+  background-color: lightseagreen;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 8px 24px;
+
+  cursor: pointer;
+  transition: 0.5s;
+}
+
+button:hover {
+  background-color: rgb(42, 228, 219);
+  color: white;
+  transform: translateY(10px);
+  box-shadow: 0 8px 16px black;
+}
+
+@keyframes bounce {
+  0% {
+    transform: translateY(0);
+    background-color: blue;
+  }
+  50% {
+    transform: translateY(-80px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.circle {
+  width: 60px;
+  height: 60px;
+  background-color: red;
+  border-radius: 50%;
+  margin: 100px auto;
+  animation: bounce 3s infinite;
+}

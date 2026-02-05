@@ -1,0 +1,481 @@
+
+~ ❯ mysql-console
+[sudo] password for miles:
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 15
+Server version: 12.1.2-MariaDB Arch Linux
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> use EMPLOYEES;
+ERROR 1049 (42000): Unknown database 'EMPLOYEES'
+MariaDB [(none)]> use employees;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+MariaDB [employees]> select * from EMPLOYEE;
++---------+-------+---------+-----------+------------+-------------+--------+----------+-----------+------+
+| FNAME   | MINIT | LNAME   | SSN       | BDATE      | ADDRESS     | gender | SALARY   | SUPERSSN  | DNO  |
++---------+-------+---------+-----------+------------+-------------+--------+----------+-----------+------+
+| John    | A     | Smith   | 111111111 | 1980-02-15 | 123 Main St | M      | 40000.00 | NULL      |    1 |
+| Mary    | B     | Johnson | 222222222 | 1985-07-22 | 45 Park Ave | F      | 55000.00 | 111111111 |    2 |
+| Robert  | C     | Brown   | 333333333 | 1990-10-10 | 90 Elm St   | M      | 50000.00 | 222222222 |    3 |
+| Linda   | D     | Davis   | 444444444 | 1992-03-30 | 12 Pine Rd  | F      | 48000.00 | 111111111 |    4 |
+| Michael | E     | Wilson  | 555555555 | 1988-12-01 | 77 Oak Ln   | M      | 61000.00 | 333333333 |    5 |
++---------+-------+---------+-----------+------------+-------------+--------+----------+-----------+------+
+5 rows in set (0.001 sec)
+
+MariaDB [employees]>  SELECT FNAME,LNAME,SALARY,DNO FROM EMPLOYEE;
++---------+---------+----------+------+
+| FNAME   | LNAME   | SALARY   | DNO  |
++---------+---------+----------+------+
+| John    | Smith   | 40000.00 |    1 |
+| Mary    | Johnson | 55000.00 |    2 |
+| Robert  | Brown   | 50000.00 |    3 |
+| Linda   | Davis   | 48000.00 |    4 |
+| Michael | Wilson  | 61000.00 |    5 |
++---------+---------+----------+------+
+5 rows in set (0.001 sec)
+
+MariaDB [employees]> SHOW TABLES;
++---------------------+
+| Tables_in_employees |
++---------------------+
+| DEPARTMENT          |
+| DEPENDENT           |
+| DEPT_LOCATIONS      |
+| EMPLOYEE            |
+| PROJECT             |
+| WORKS_ON            |
++---------------------+
+6 rows in set (0.001 sec)
+
+MariaDB [employees]> SELECT * FROM DEPARTMENT;
++----------------+---------+-----------+--------------+
+| DNAME          | DNUMBER | MGRSSN    | MGRSTARTDATE |
++----------------+---------+-----------+--------------+
+| Research       |       1 | 111111111 | 2020-01-01   |
+| Administration |       2 | 222222222 | 2019-05-10   |
+| Sales          |       3 | 333333333 | 2021-03-12   |
+| IT             |       4 | 444444444 | 2018-11-22   |
+| Marketing      |       5 | 555555555 | 2022-07-15   |
++----------------+---------+-----------+--------------+
+5 rows in set (0.001 sec)
+
+MariaDB [employees]> SELECT * FROM PROJECT;
++---------------+---------+-------------+------+
+| PNAME         | PNUMBER | PLOCATION   | DNUM |
++---------------+---------+-------------+------+
+| Project Alpha |     101 | New York    |    1 |
+| Project Beta  |     102 | Chicago     |    2 |
+| Project Gamma |     103 | Los Angeles |    3 |
+| Project Delta |     104 | Houston     |    4 |
+| Project Omega |     105 | Miami       |    5 |
++---------------+---------+-------------+------+
+5 rows in set (0.001 sec)
+
+MariaDB [employees]> SELECT PNAME,PLOCATION,DNAME FROM EMPLOYEE
+    -> WHERE DNUM JOIN DEPARTMENT ON DNUMBER;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'JOIN DEPARTMENT ON DNUMBER' at line 2
+MariaDB [employees]> SELECT PROJECT.PNAME,PROJECT.PLOCATION,DEPARTMENT.DNAME FROM EMPLOYEE INNER JOIN DEPARTMENT ON DNUMBER;
+ERROR 1054 (42S22): Unknown column 'PROJECT.PNAME' in 'SELECT'
+MariaDB [employees]> SELECT PROJECT.PNAME,PROJECT.PLOCATION,DEPARTMENT.DNAME FROM EMPLOYEE
+    -> INNER JOIN DEPARTMENT ON
+    -> PROJECT.DNUM = DEPARTMENT.DNUMBER;
+ERROR 1054 (42S22): Unknown column 'PROJECT.PNAME' in 'SELECT'
+MariaDB [employees]> SELECT PROJECT.PNAME,PROJECT.PLOCATION,DEPARTMENT.DNAME FROM PROJECT INNER JOIN DEPARTMENT ON PROJECT.DNUM = DEPARTMENT.DNUMBER;
++---------------+-------------+----------------+
+| PNAME         | PLOCATION   | DNAME          |
++---------------+-------------+----------------+
+| Project Alpha | New York    | Research       |
+| Project Beta  | Chicago     | Administration |
+| Project Gamma | Los Angeles | Sales          |
+| Project Delta | Houston     | IT             |
+| Project Omega | Miami       | Marketing      |
++---------------+-------------+----------------+
+5 rows in set (0.001 sec)
+
+MariaDB [employees]>
+MariaDB [employees]>
+MariaDB [employees]>
+MariaDB [employees]>
+MariaDB [employees]>
+MariaDB [employees]>
+MariaDB [employees]>
+MariaDB [employees]> SELECT PROJECT.PNAME,PROJECT.PLOCATION,DEPARTMENT.DNAME FROM PROJECT INNER JOIN DEPARTMENT ON PROJECT.DNUM = DEPARTMENT.DNUMBER;
++---------------+-------------+----------------+
+| PNAME         | PLOCATION   | DNAME          |
++---------------+-------------+----------------+
+| Project Alpha | New York    | Research       |
+| Project Beta  | Chicago     | Administration |
+| Project Gamma | Los Angeles | Sales          |
+| Project Delta | Houston     | IT             |
+| Project Omega | Miami       | Marketing      |
++---------------+-------------+----------------+
+5 rows in set (0.001 sec)
+
+MariaDB [employees]> SELECT FNAME,LNAME,SALARY,DNUM,
+    -> (SALARY * 0.1) AS [ANNUAL COMM]
+    -> FROM EMPLOYEE;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '[ANNUAL COMM]
+FROM EMPLOYEE' at line 2
+MariaDB [employees]> SELECT FNAME,LNAME,SALARY,DNUM, SUM(SALARY) AS [ANNUAL COMM] FROM EMPLOYEE;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '[ANNUAL COMM] FROM EMPLOYEE' at line 1
+MariaDB [employees]> SELECT * FROM EMPLOYEE;
++---------+-------+---------+-----------+------------+-------------+--------+----------+-----------+------+
+| FNAME   | MINIT | LNAME   | SSN       | BDATE      | ADDRESS     | gender | SALARY   | SUPERSSN  | DNO  |
++---------+-------+---------+-----------+------------+-------------+--------+----------+-----------+------+
+| John    | A     | Smith   | 111111111 | 1980-02-15 | 123 Main St | M      | 40000.00 | NULL      |    1 |
+| Mary    | B     | Johnson | 222222222 | 1985-07-22 | 45 Park Ave | F      | 55000.00 | 111111111 |    2 |
+| Robert  | C     | Brown   | 333333333 | 1990-10-10 | 90 Elm St   | M      | 50000.00 | 222222222 |    3 |
+| Linda   | D     | Davis   | 444444444 | 1992-03-30 | 12 Pine Rd  | F      | 48000.00 | 111111111 |    4 |
+| Michael | E     | Wilson  | 555555555 | 1988-12-01 | 77 Oak Ln   | M      | 61000.00 | 333333333 |    5 |
++---------+-------+---------+-----------+------------+-------------+--------+----------+-----------+------+
+5 rows in set (0.001 sec)
+
+MariaDB [employees]> SELECT *,SUM(10) FROM EMPLOYEE;
++-------+-------+-------+-----------+------------+-------------+--------+----------+----------+------+---------+
+| FNAME | MINIT | LNAME | SSN       | BDATE      | ADDRESS     | gender | SALARY   | SUPERSSN | DNO  | SUM(10) |
++-------+-------+-------+-----------+------------+-------------+--------+----------+----------+------+---------+
+| John  | A     | Smith | 111111111 | 1980-02-15 | 123 Main St | M      | 40000.00 | NULL     |    1 |      50 |
++-------+-------+-------+-----------+------------+-------------+--------+----------+----------+------+---------+
+1 row in set (0.001 sec)
+
+MariaDB [employees]> SELECT *,SUM(10) AS TEST  FROM EMPLOYEE;
++-------+-------+-------+-----------+------------+-------------+--------+----------+----------+------+------+
+| FNAME | MINIT | LNAME | SSN       | BDATE      | ADDRESS     | gender | SALARY   | SUPERSSN | DNO  | TEST |
++-------+-------+-------+-----------+------------+-------------+--------+----------+----------+------+------+
+| John  | A     | Smith | 111111111 | 1980-02-15 | 123 Main St | M      | 40000.00 | NULL     |    1 |   50 |
++-------+-------+-------+-----------+------------+-------------+--------+----------+----------+------+------+
+1 row in set (0.001 sec)
+
+MariaDB [employees]> SELECT *,SUM(DNUM) AS TEST  FROM EMPLOYEE;
+ERROR 1054 (42S22): Unknown column 'DNUM' in 'SELECT'
+MariaDB [employees]> SELECT *,SUM(EMPLOYEE.DNUM) AS TEST  FROM EMPLOYEE;
+ERROR 1054 (42S22): Unknown column 'EMPLOYEE.DNUM' in 'SELECT'
+MariaDB [employees]> SELECT *,SUM(DNO) AS TEST  FROM EMPLOYEE;
++-------+-------+-------+-----------+------------+-------------+--------+----------+----------+------+------+
+| FNAME | MINIT | LNAME | SSN       | BDATE      | ADDRESS     | gender | SALARY   | SUPERSSN | DNO  | TEST |
++-------+-------+-------+-----------+------------+-------------+--------+----------+----------+------+------+
+| John  | A     | Smith | 111111111 | 1980-02-15 | 123 Main St | M      | 40000.00 | NULL     |    1 |   15 |
++-------+-------+-------+-----------+------------+-------------+--------+----------+----------+------+------+
+1 row in set (0.001 sec)
+
+MariaDB [employees]> SELECT *,CALC(DNO) AS TEST  FROM EMPLOYEE;
+ERROR 1305 (42000): FUNCTION employees.CALC does not exist
+MariaDB [employees]> SELECT *,SALARY *0.1  AS TEST  FROM EMPLOYEE;
++---------+-------+---------+-----------+------------+-------------+--------+----------+-----------+------+----------+
+| FNAME   | MINIT | LNAME   | SSN       | BDATE      | ADDRESS     | gender | SALARY   | SUPERSSN  | DNO  | TEST     |
++---------+-------+---------+-----------+------------+-------------+--------+----------+-----------+------+----------+
+| John    | A     | Smith   | 111111111 | 1980-02-15 | 123 Main St | M      | 40000.00 | NULL      |    1 | 4000.000 |
+| Mary    | B     | Johnson | 222222222 | 1985-07-22 | 45 Park Ave | F      | 55000.00 | 111111111 |    2 | 5500.000 |
+| Robert  | C     | Brown   | 333333333 | 1990-10-10 | 90 Elm St   | M      | 50000.00 | 222222222 |    3 | 5000.000 |
+| Linda   | D     | Davis   | 444444444 | 1992-03-30 | 12 Pine Rd  | F      | 48000.00 | 111111111 |    4 | 4800.000 |
+| Michael | E     | Wilson  | 555555555 | 1988-12-01 | 77 Oak Ln   | M      | 61000.00 | 333333333 |    5 | 6100.000 |
++---------+-------+---------+-----------+------------+-------------+--------+----------+-----------+------+----------+
+5 rows in set (0.001 sec)
+
+MariaDB [employees]> SELECT *,SALARY * 0.1  AS [ANNUAL COMM]  FROM EMPLOYEE;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '[ANNUAL COMM]  FROM EMPLOYEE' at line 1
+MariaDB [employees]> SELECT *,SALARY * 0.1  AS "ANNUAL COMM"  FROM EMPLOYEE;
++---------+-------+---------+-----------+------------+-------------+--------+----------+-----------+------+-------------+
+| FNAME   | MINIT | LNAME   | SSN       | BDATE      | ADDRESS     | gender | SALARY   | SUPERSSN  | DNO  | ANNUAL COMM |
++---------+-------+---------+-----------+------------+-------------+--------+----------+-----------+------+-------------+
+| John    | A     | Smith   | 111111111 | 1980-02-15 | 123 Main St | M      | 40000.00 | NULL      |    1 |    4000.000 |
+| Mary    | B     | Johnson | 222222222 | 1985-07-22 | 45 Park Ave | F      | 55000.00 | 111111111 |    2 |    5500.000 |
+| Robert  | C     | Brown   | 333333333 | 1990-10-10 | 90 Elm St   | M      | 50000.00 | 222222222 |    3 |    5000.000 |
+| Linda   | D     | Davis   | 444444444 | 1992-03-30 | 12 Pine Rd  | F      | 48000.00 | 111111111 |    4 |    4800.000 |
+| Michael | E     | Wilson  | 555555555 | 1988-12-01 | 77 Oak Ln   | M      | 61000.00 | 333333333 |    5 |    6100.000 |
++---------+-------+---------+-----------+------------+-------------+--------+----------+-----------+------+-------------+
+5 rows in set (0.001 sec)
+
+MariaDB [employees]>
+MariaDB [employees]>
+MariaDB [employees]>
+MariaDB [employees]>
+MariaDB [employees]>
+MariaDB [employees]> SELECT *,SALARY * 0.1  AS "ANNUAL COMM"  FROM EMPLOYEE;
++---------+-------+---------+-----------+------------+-------------+--------+----------+-----------+------+-------------+
+| FNAME   | MINIT | LNAME   | SSN       | BDATE      | ADDRESS     | gender | SALARY   | SUPERSSN  | DNO  | ANNUAL COMM |
++---------+-------+---------+-----------+------------+-------------+--------+----------+-----------+------+-------------+
+| John    | A     | Smith   | 111111111 | 1980-02-15 | 123 Main St | M      | 40000.00 | NULL      |    1 |    4000.000 |
+| Mary    | B     | Johnson | 222222222 | 1985-07-22 | 45 Park Ave | F      | 55000.00 | 111111111 |    2 |    5500.000 |
+| Robert  | C     | Brown   | 333333333 | 1990-10-10 | 90 Elm St   | M      | 50000.00 | 222222222 |    3 |    5000.000 |
+| Linda   | D     | Davis   | 444444444 | 1992-03-30 | 12 Pine Rd  | F      | 48000.00 | 111111111 |    4 |    4800.000 |
+| Michael | E     | Wilson  | 555555555 | 1988-12-01 | 77 Oak Ln   | M      | 61000.00 | 333333333 |    5 |    6100.000 |
++---------+-------+---------+-----------+------------+-------------+--------+----------+-----------+------+-------------+
+5 rows in set (0.001 sec)
+
+MariaDB [employees]> SELECT SSN AS ID,(FNAM + LNAME) AS NAME  FROM EMPLOYEE;
+ERROR 1054 (42S22): Unknown column 'FNAM' in 'SELECT'
+MariaDB [employees]> SELECT SSN AS ID,(FNAME + LNAME) AS NAME  FROM EMPLOYEE;
++-----------+------+
+| ID        | NAME |
++-----------+------+
+| 111111111 |    0 |
+| 222222222 |    0 |
+| 333333333 |    0 |
+| 444444444 |    0 |
+| 555555555 |    0 |
++-----------+------+
+5 rows in set, 10 warnings (0.001 sec)
+
+MariaDB [employees]> SELECT SSN AS ID,(FNAME , LNAME) AS NAME  FROM EMPLOYEE;
+ERROR 1241 (21000): Operand should contain 1 column(s)
+MariaDB [employees]> SELECT SSN AS ID,CONCT(FNAME , LNAME) AS NAME  FROM EMPLOYEE;
+ERROR 1305 (42000): FUNCTION employees.CONCT does not exist
+MariaDB [employees]> SELECT SSN AS ID,CONCAT(FNAME , LNAME) AS NAME  FROM EMPLOYEE;
++-----------+---------------+
+| ID        | NAME          |
++-----------+---------------+
+| 111111111 | JohnSmith     |
+| 222222222 | MaryJohnson   |
+| 333333333 | RobertBrown   |
+| 444444444 | LindaDavis    |
+| 555555555 | MichaelWilson |
++-----------+---------------+
+5 rows in set (0.001 sec)
+
+MariaDB [employees]> SELECT SSN AS ID,CONCAT(FNAME ," ", LNAME) AS NAME  FROM EMPLOYEE;
++-----------+----------------+
+| ID        | NAME           |
++-----------+----------------+
+| 111111111 | John Smith     |
+| 222222222 | Mary Johnson   |
+| 333333333 | Robert Brown   |
+| 444444444 | Linda Davis    |
+| 555555555 | Michael Wilson |
++-----------+----------------+
+5 rows in set (0.001 sec)
+
+MariaDB [employees]> SELECT SSN AS ID,CONCAT(FNAME ," ", LNAME) AS NAME  FROM EMPLOYEE
+    -> WHERE SALARY > 1000;
++-----------+----------------+
+| ID        | NAME           |
++-----------+----------------+
+| 111111111 | John Smith     |
+| 222222222 | Mary Johnson   |
+| 333333333 | Robert Brown   |
+| 444444444 | Linda Davis    |
+| 555555555 | Michael Wilson |
++-----------+----------------+
+5 rows in set (0.001 sec)
+
+MariaDB [employees]> SELECT SSN AS ID,CONCAT(FNAME ," ", LNAME) AS NAME  FROM EMPLOYEE WHERE SALARY > 10000;
++-----------+----------------+
+| ID        | NAME           |
++-----------+----------------+
+| 111111111 | John Smith     |
+| 222222222 | Mary Johnson   |
+| 333333333 | Robert Brown   |
+| 444444444 | Linda Davis    |
+| 555555555 | Michael Wilson |
++-----------+----------------+
+5 rows in set (0.001 sec)
+
+MariaDB [employees]> SELECT SSN AS ID,CONCAT(FNAME ," ", LNAME) AS NAME  FROM EMPLOYEE WHERE SALARY > 100000;
+Empty set (0.001 sec)
+
+MariaDB [employees]> SELECT SSN AS ID,CONCAT(FNAME ," ", LNAME) AS NAME  FROM EMPLOYEE WHERE SALARY > 10000;
++-----------+----------------+
+| ID        | NAME           |
++-----------+----------------+
+| 111111111 | John Smith     |
+| 222222222 | Mary Johnson   |
+| 333333333 | Robert Brown   |
+| 444444444 | Linda Davis    |
+| 555555555 | Michael Wilson |
++-----------+----------------+
+5 rows in set (0.001 sec)
+
+MariaDB [employees]> SELECT SSN AS ID,CONCAT(FNAME ," ", LNAME) AS NAME  FROM EMPLOYEE WHERE (SALARY*12) > 10000;
++-----------+----------------+
+| ID        | NAME           |
++-----------+----------------+
+| 111111111 | John Smith     |
+| 222222222 | Mary Johnson   |
+| 333333333 | Robert Brown   |
+| 444444444 | Linda Davis    |
+| 555555555 | Michael Wilson |
++-----------+----------------+
+5 rows in set (0.001 sec)
+
+MariaDB [employees]> SELECT SSN AS ID,CONCAT(FNAME ," ", LNAME) AS NAME  FROM EMPLOYEE WHERE (SALARY*12) > 100000000;
+Empty set (0.001 sec)
+
+MariaDB [employees]> SELECT SSN AS ID,CONCAT(FNAME ," ", LNAME) AS NAME  FROM EMPLOYEE WHERE (SALARY*12) > 10000;
++-----------+----------------+
+| ID        | NAME           |
++-----------+----------------+
+| 111111111 | John Smith     |
+| 222222222 | Mary Johnson   |
+| 333333333 | Robert Brown   |
+| 444444444 | Linda Davis    |
+| 555555555 | Michael Wilson |
++-----------+----------------+
+5 rows in set (0.001 sec)
+
+MariaDB [employees]> SELECT SSN AS ID,CONCAT(FNAME ," ", LNAME) AS NAME  FROM EMPLOYEE WHERE SALARY > 10000;
++-----------+----------------+
+| ID        | NAME           |
++-----------+----------------+
+| 111111111 | John Smith     |
+| 222222222 | Mary Johnson   |
+| 333333333 | Robert Brown   |
+| 444444444 | Linda Davis    |
+| 555555555 | Michael Wilson |
++-----------+----------------+
+5 rows in set (0.001 sec)
+
+MariaDB [employees]> SELECT SSN AS ID,CONCAT(FNAME ," ", LNAME) AS NAME  FROM EMPLOYEE WHERE (SALARY*12) > 100000000;
+Empty set (0.001 sec)
+
+MariaDB [employees]> SELECT SSN AS ID,CONCAT(FNAME ," ", LNAME) AS NAME  FROM EMPLOYEE WHERE (SALARY*12) > 500000;
++-----------+----------------+
+| ID        | NAME           |
++-----------+----------------+
+| 222222222 | Mary Johnson   |
+| 333333333 | Robert Brown   |
+| 444444444 | Linda Davis    |
+| 555555555 | Michael Wilson |
++-----------+----------------+
+4 rows in set (0.001 sec)
+
+MariaDB [employees]> SELECT CONCAT(FNAME ," ", LNAME) AS NAME , SALARY FROM EMPLOYEE WHERE GENDER = 'M';
++----------------+----------+
+| NAME           | SALARY   |
++----------------+----------+
+| John Smith     | 40000.00 |
+| Robert Brown   | 50000.00 |
+| Michael Wilson | 61000.00 |
++----------------+----------+
+3 rows in set (0.001 sec)
+
+MariaDB [employees]> SELECT CONCAT(FNAME ," ", LNAME) AS NAME , SALARY FROM EMPLOYEE WHERE GENDER = 'F';
++--------------+----------+
+| NAME         | SALARY   |
++--------------+----------+
+| Mary Johnson | 55000.00 |
+| Linda Davis  | 48000.00 |
++--------------+----------+
+2 rows in set (0.001 sec)
+
+MariaDB [employees]> SELECT * FROM DEPARTMENT;
++----------------+---------+-----------+--------------+
+| DNAME          | DNUMBER | MGRSSN    | MGRSTARTDATE |
++----------------+---------+-----------+--------------+
+| Research       |       1 | 111111111 | 2020-01-01   |
+| Administration |       2 | 222222222 | 2019-05-10   |
+| Sales          |       3 | 333333333 | 2021-03-12   |
+| IT             |       4 | 444444444 | 2018-11-22   |
+| Marketing      |       5 | 555555555 | 2022-07-15   |
++----------------+---------+-----------+--------------+
+5 rows in set (0.001 sec)
+
+MariaDB [employees]> INSERT INTO DEPARTMENT
+    -> VALUES (HR,6,222222222,2020-01-01);
+ERROR 1054 (42S22): Unknown column 'HR' in 'VALUES'
+MariaDB [employees]> INSERT INTO DEPARTMENT VALUES (HR,6,222222222,2020-01-01)
+    ->
+    ->
+    -> ;
+ERROR 1054 (42S22): Unknown column 'HR' in 'VALUES'
+MariaDB [employees]> INSERT INTO DEPARTMENT VALUES (HR,6,222222222,2020-01-01)
+    -> ;
+ERROR 1054 (42S22): Unknown column 'HR' in 'VALUES'
+MariaDB [employees]> INSERT INTO DEPARTMENT
+    -> (DNAME , DNUMBER,MGRSSN,MGRSTARTDATE)
+    -> VALUES (HR,6,222222222,2020-01-01)
+    -> ;
+ERROR 1054 (42S22): Unknown column 'HR' in 'VALUES'
+MariaDB [employees]> INSERT INTO DEPARTMENT  (DNAME , DNUMBER,MGRSSN,MGRSTARTDATE) VALUES ("HR",6,222222222,2020-01-01);
+ERROR 1292 (22007): Incorrect date value: '2018' for column `employees`.`DEPARTMENT`.`MGRSTARTDATE` at row 1
+MariaDB [employees]> INSERT INTO DEPARTMENT  (DNAME , DNUMBER,MGRSSN,MGRSTARTDATE) VALUES ("HR",6,222222222,"2020-01-01");
+Query OK, 1 row affected (0.011 sec)
+
+MariaDB [employees]> SELECT * FROM DEPARTMENT;
++----------------+---------+-----------+--------------+
+| DNAME          | DNUMBER | MGRSSN    | MGRSTARTDATE |
++----------------+---------+-----------+--------------+
+| Research       |       1 | 111111111 | 2020-01-01   |
+| Administration |       2 | 222222222 | 2019-05-10   |
+| Sales          |       3 | 333333333 | 2021-03-12   |
+| IT             |       4 | 444444444 | 2018-11-22   |
+| Marketing      |       5 | 555555555 | 2022-07-15   |
+| HR             |       6 | 222222222 | 2020-01-01   |
++----------------+---------+-----------+--------------+
+6 rows in set (0.001 sec)
+
+MariaDB [employees]> SELECT DNUMBER AS ID, DNAME AS NAME FROM DEPARTMENT
+    -> WHERE MGRSSN =222222222;
++----+----------------+
+| ID | NAME           |
++----+----------------+
+|  2 | Administration |
+|  6 | HR             |
++----+----------------+
+2 rows in set (0.001 sec)
+
+MariaDB [employees]> SELECT * FROM PROJECT;
++---------------+---------+-------------+------+
+| PNAME         | PNUMBER | PLOCATION   | DNUM |
++---------------+---------+-------------+------+
+| Project Alpha |     101 | New York    |    1 |
+| Project Beta  |     102 | Chicago     |    2 |
+| Project Gamma |     103 | Los Angeles |    3 |
+| Project Delta |     104 | Houston     |    4 |
+| Project Omega |     105 | Miami       |    5 |
++---------------+---------+-------------+------+
+5 rows in set (0.001 sec)
+
+MariaDB [employees]> INSERT INTO PROJECT * VALUES (Project seen,106,Egypt,3);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '* VALUES (Project seen,106,Egypt,3)' at line 1
+MariaDB [employees]> INSERT INTO PROJECT * VALUES ("Project seen",106,"Egypt",3);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '* VALUES ("Project seen",106,"Egypt",3)' at line 1
+MariaDB [employees]> INSERT INTO PROJECT VALUES ("Project seen",106,"Egypt",3);
+Query OK, 1 row affected (0.011 sec)
+
+MariaDB [employees]> SELECT * FROM PROJECT;
++---------------+---------+-------------+------+
+| PNAME         | PNUMBER | PLOCATION   | DNUM |
++---------------+---------+-------------+------+
+| Project Alpha |     101 | New York    |    1 |
+| Project Beta  |     102 | Chicago     |    2 |
+| Project Gamma |     103 | Los Angeles |    3 |
+| Project Delta |     104 | Houston     |    4 |
+| Project Omega |     105 | Miami       |    5 |
+| Project seen  |     106 | Egypt       |    3 |
++---------------+---------+-------------+------+
+6 rows in set (0.001 sec)
+
+MariaDB [employees]> SELECT PNUMBER AS ID , PNAME AS NAME FROM PROJECT
+    -> WHERE DNUM = 3;
++-----+---------------+
+| ID  | NAME          |
++-----+---------------+
+| 103 | Project Gamma |
+| 106 | Project seen  |
++-----+---------------+
+2 rows in set (0.001 sec)
+
+MariaDB [employees]> DESCRIBE EMPLOYEE;
++----------+---------------+------+-----+---------+-------+
+| Field    | Type          | Null | Key | Default | Extra |
++----------+---------------+------+-----+---------+-------+
+| FNAME    | varchar(20)   | YES  |     | NULL    |       |
+| MINIT    | char(1)       | YES  |     | NULL    |       |
+| LNAME    | varchar(20)   | YES  |     | NULL    |       |
+| SSN      | char(9)       | NO   | PRI | NULL    |       |
+| BDATE    | date          | YES  |     | NULL    |       |
+| ADDRESS  | varchar(100)  | YES  |     | NULL    |       |
+| gender   | enum('M','F') | YES  |     | NULL    |       |
+| SALARY   | decimal(10,2) | YES  |     | NULL    |       |
+| SUPERSSN | char(9)       | YES  | MUL | NULL    |       |
+| DNO      | int(11)       | YES  | MUL | NULL    |       |
++----------+---------------+------+-----+---------+-------+
+10 rows in set (0.001 sec)
+
+MariaDB [employees]>

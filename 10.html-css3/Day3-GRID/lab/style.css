@@ -1,0 +1,125 @@
+:root {
+  --primary-navy: #1a2332;
+  --sidebar-bg: #ebf0f5;
+  --dashboard-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --accent-blue: #3498db;
+  --text-main: #333333;
+  --footer-bg: #1a2332;
+  --border-radius: 8px; /* Standard radius for cards/buttons */
+}
+body {
+  background: white;
+  margin: 0;
+  padding: 0;
+}
+
+.content {
+  display: grid;
+  height: 100vh;
+  grid-template-areas:
+    "header header"
+    "sidebar dashboard"
+    "footer footer";
+  grid-template-columns: 1fr 3fr;
+  grid-template-rows: auto 1fr auto;
+}
+
+.navbar {
+  grid-area: header;
+  display: flex;
+  padding-left: 10px;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--accent-blue);
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.navbar button {
+  margin-right: 10px;
+  padding: 5px 20px;
+  justify-content: center;
+}
+
+.content .sidebar {
+  grid-area: sidebar;
+  background-color: var(--sidebar-bg);
+}
+
+.sidebar ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  maring: 0;
+  padding: 10px;
+  justify-content: center;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.sidebar ul li {
+  background-color: #d6e0ea;
+  border-radius: var(--border-radius);
+  padding: 10px;
+  color: var(--text-main);
+}
+.dashboard {
+  grid-area: dashboard;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  background-color: var(--dashboard-bg);
+  flex-wrap: wrap;
+}
+
+.footer {
+  grid-area: footer;
+  text-align: center;
+  background-color: var(--footer-bg);
+  min-height: 20px;
+  color: white;
+}
+
+.card {
+  padding: 20px;
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--card-bg);
+  box-shadow: o 4px 6px rgba(0, 0, 0, 0, 0, 05);
+}
+.card img {
+  width: 200px;
+  height: 100px;
+}
+
+@media screen and (max-width: 567px) {
+  .content {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "header"
+      "sidebar"
+      "dashboard"
+      "footer";
+    height: auto;
+  }
+
+  .sidebar ul {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .sidebar ul li {
+    flex: 1;
+    min-width: 100px;
+  }
+
+  .dashboard {
+    justify-content: center;
+  }
+}

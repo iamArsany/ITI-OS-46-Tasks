@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Random Circles Canvas</title>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+        font-family: Arial, sans-serif;
+      }
+
+      #controls {
+        position: fixed;
+        top: 10px;
+        left: 40%;
+        background: white;
+        padding: 10px;
+        border-radius: 8px;
+        z-index: 10;
+      }
+
+      canvas {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="controls">
+      <label>
+        Color:
+        <input type="color" id="colorInput" value="#ff0000" />
+      </label>
+      <br /><br />
+      <button id="drawBtn">Click me</button>
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+    <script>
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+
+      resizeCanvas();
+      window.addEventListener("resize", resizeCanvas);
+
+      document.getElementById("drawBtn").addEventListener("click", () => {
+        const color = document.getElementById("colorInput").value;
+        const count = 20;
+
+        for (let i = 0; i < count; i++) {
+          drawRandomCircle(color);
+        }
+      });
+
+      function drawRandomCircle(color) {
+        const radius = Math.random() * 40 + 10;
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.strokeStyle = color;
+        ctx.stroke();
+      }
+    </script>
+  </body>
+</html>
+

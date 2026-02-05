@@ -1,0 +1,33 @@
+# compiled files
+*.class
+*.o
+*.out
+a.out
+*.exe
+
+# Java build folders
+build/
+dist/
+out/
+
+# archives
+*.zip
+*.7z
+*.tar
+*.gz
+
+# backups
+*.bak
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+*.iml
+.idea/
+nbproject/private/
+
+# logs
+*.log
+

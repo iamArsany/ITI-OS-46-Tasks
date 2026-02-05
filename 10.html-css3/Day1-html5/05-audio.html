@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Simple Audio Player</title>
+
+    <style>
+      .media-player {
+        display: flex;
+        width: 500px;
+        height: 250px;
+        background-color: #ffdbdb;
+        margin: 20px auto;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .img-player {
+        width: 200px;
+        height: 200px;
+      }
+
+      .audio-list {
+        width: 500px; /* same width as media-player */
+        margin: 0 auto;
+        background-color: #eee;
+      }
+
+      .song {
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+        cursor: pointer;
+      }
+
+      .song:hover {
+        background-color: #ddd;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="media-player">
+      <img id="songImg" class="img-player" src="supermario.png" />
+
+      <div>
+        <audio id="myAudio" src="supermario.mp3"></audio>
+
+        <input type="range" id="timeRange" min="0" value="0" step="0.1" />
+        <br />
+
+        <button onclick="playAudio()">play</button>
+        <button onclick="pauseAudio()">pause</button>
+        <button onclick="stopAudio()">stop</button>
+      </div>
+    </div>
+
+    <div class="audio-list">
+      <div class="song" data-audio="supermario.mp3" data-img="supermario.png">
+        supermario
+      </div>
+      <div class="song" data-audio="song2.mp3" data-img="song2.png">2.song</div>
+      <div class="song" data-audio="song3.mp3" data-img="song3.png">3.song</div>
+    </div>
+
+    <script>
+      const audio = document.getElementById("myAudio");
+      const img = document.getElementById("songImg");
+      const range = document.getElementById("timeRange");
+      const songs = document.querySelectorAll(".song");
+
+      function playAudio() {
+        audio.play();
+      }
+
+      function pauseAudio() {
+        audio.pause();
+      }
+
+      function stopAudio() {
+        audio.pause();
+        audio.currentTime = 0;
+      }
+
+      songs.forEach((song) => {
+        song.onclick = function () {
+          audio.src = this.dataset.audio;
+          img.src = this.dataset.img;
+          audio.play();
+        };
+      });
+
+      audio.addEventListener("loadedmetadata", () => {
+        range.max = audio.duration;
+      });
+
+      audio.addEventListener("timeupdate", () => {
+        range.value = audio.currentTime;
+      });
+
+      range.addEventListener("input", () => {
+        audio.currentTime = range.value;
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,260 @@
+
+#############################    1         ######################
+
+
+MariaDB [companyDB]> select d.Dnum,d.Dname,d.MGRSSN,e.Fname from Department d , Employee e where e.SSN=d.MGRSSN;
++------+---------+--------+--------+
+| Dnum | Dname   | MGRSSN | Fname  |
++------+---------+--------+--------+
+|   10 | DP1     | 102660 | Amr    |
+|   20 | DP2     | 102672 | Arsany |
+|   30 | DP3     | 512463 | Edward |
+|  100 | DEPT IT | 968574 | Noha   |
++------+---------+--------+--------+
+4 rows in set (0.001 sec)
+
+
+
+
+###################################################
+###################################################
+###################################################
+
+
+#############################    2         ######################
+
+MariaDB [companyDB]> select d.Dname as 'Dept Name',p.Pname as 'Project Name' from Department d left outer join Project p on d.Dnum=p.Dnum;
++-----------+-----------------+
+| Dept Name | Project Name    |
++-----------+-----------------+
+| DP1       | AL Solimaniah   |
+| DP1       | Al Rabwah       |
+| DP1       | Al Rawdah       |
+| DP2       | Al Rowad        |
+| DP2       | Ebad El Rahman  |
+| DP3       | Al Rehab        |
+| DP3       | Pitcho american |
+| DEPT IT   | NULL            |
++-----------+-----------------+
+8 rows in set (0.001 sec)
+
+
+###################################################
+###################################################
+###################################################
+
+
+
+#############################    3         ######################
+
+MariaDB [companyDB]> select d.* ,e.Fname from Dependent d left outer join Employee e on d.ESSN = e.SSN;
+
++--------+----------------+------+------------+--------+
+| ESSN   | Dependent_name | Sex  | Bdate      | Fname  |
++--------+----------------+------+------------+--------+
+| 112233 | Hala Saied Ali | F    | 1970-10-18 | Ahmed  |
+| 321654 | Ramy Amr Omran | M    | 1990-01-26 | Amr    |
+| 321654 | Omar Amr Omran | M    | 1993-03-30 | Amr    |
+| 321654 | Sanaa Gawish   | F    | 1973-05-16 | Amr    |
+| 512463 | Sara Edward    | F    | 2001-09-15 | Edward |
+| 512463 | Nora Ghaly     | F    | 1976-06-22 | Edward |
++--------+----------------+------+------------+--------+
+6 rows in set (0.001 sec)
+
+###################################################
+###################################################
+###################################################
+
+
+#############################    4         ######################
+
+
+MariaDB [companyDB]> select e.* from Employee e right outer join Department d on e.SSN=d.MGRSSN;
++--------+---------+--------+------------+----------------------------------------+------+--------+----------+------+
+| Fname  | Lname   | SSN    | Bdate      | Addresss                               | Sex  | Salary | Superssn | Dno  |
++--------+---------+--------+------------+----------------------------------------+------+--------+----------+------+
+| Amr    | Shoukry | 102660 | 2002-12-16 | somewhere                              | M    |   NULL | NULL     |   20 |
+| Arsany | Ashraf  | 102672 | 2002-12-16 | mansheyt elbakry                       | M    |   1481 | 112233   |   20 |
+| Edward | Hanna   | 512463 | 1972-08-19 | 18 Abaas El 3akaad St. Nasr City.Cairo | M    |   1500 | 321654   |   30 |
+| Noha   | Mohamed | 968574 | 1975-02-01 | 55 Orabi St. El Mohandiseen .Cairo     | F    |   1600 | 321654   |  100 |
++--------+---------+--------+------------+----------------------------------------+------+--------+----------+------+
+4 rows in set (0.001 sec)
+
+###################################################
+###################################################
+###################################################
+
+
+#############################    5         ######################
+
+MariaDB [companyDB]> select Pnumber,Pname,Plocation from Project where City in ('Cairo','Alex');
++---------+-----------------+-----------------+
+| Pnumber | Pname           | Plocation       |
++---------+-----------------+-----------------+
+|     100 | AL Solimaniah   | Cairo_Alex Road |
+|     500 | Al Rehab        | Nasr City       |
+|     600 | Pitcho american | Maady           |
+|     700 | Ebad El Rahman  | Ring Road       |
++---------+-----------------+-----------------+
+4 rows in set (0.001 sec)
+
+
+###################################################
+###################################################
+###################################################
+
+
+#############################    6         ######################
+
+MariaDB [companyDB]> select * from Project where Pname like 'a%';
++---------------+---------+---------------------+-------+------+
+| Pname         | Pnumber | Plocation           | City  | Dnum |
++---------------+---------+---------------------+-------+------+
+| AL Solimaniah |     100 | Cairo_Alex Road     | Alex  |   10 |
+| Al Rabwah     |     200 | 6th of October City | Giza  |   10 |
+| Al Rawdah     |     300 | Zaied City          | Giza  |   10 |
+| Al Rowad      |     400 | Cairo_Faiyom Road   | Giza  |   20 |
+| Al Rehab      |     500 | Nasr City           | Cairo |   30 |
++---------------+---------+---------------------+-------+------+
+5 rows in set (0.001 sec)
+
+
+#############################    7         ######################
+
+MariaDB [companyDB]> select * from Employee where Dno=30 and Salary between 1000 and 2000;
+
++--------+-------+--------+------------+----------------------------------------+------+--------+----------+------+
+| Fname  | Lname | SSN    | Bdate      | Addresss                               | Sex  | Salary | Superssn | Dno  |
++--------+-------+--------+------------+----------------------------------------+------+--------+----------+------+
+| Edward | Hanna | 512463 | 1972-08-19 | 18 Abaas El 3akaad St. Nasr City.Cairo | M    |   1500 | 321654   |   30 |
+| Maged  | Raoof | 521634 | 1980-04-06 | 18 Kholosi st.Shobra.Cairo             | M    |   1000 | 968574   |   30 |
++--------+-------+--------+------------+----------------------------------------+------+--------+----------+------+
+2 rows in set (0.001 sec)
+
+################################################################
+################################################################
+################################################################
+
+
+
+#############################    8         ######################
+
+
+MariaDB [companyDB]> select e.Fname as Name, w.ESSN as id from Employee e 
+        right join Works_for w on w.ESSN=e.SSN
+        left join Project p on w.Pno = p.Pnumber 
+        where e.Dno=10 and w.Hours >10 and p.Pname like "A%";
++-------+--------+
+| Name  | id     |
++-------+--------+
+| Ahmed | 112233 |
++-------+--------+
+1 row in set (0.001 sec)  
+
+#############################    9       ######################
+
+MariaDB [companyDB]> select concat(s.Fname,' ',s.Lname) as fullName from Employee e join Employee s on s.SSN=e.Superssn where e.Superssn=112233;
+
++-----------+
+| fullName  |
++-----------+
+| Ahmed Ali |
++-----------+
+1 row in set (0.001 sec)
+
+
+
+################################################################
+################################################################
+################################################################
+
+#############################    10       ######################
+
+
+MariaDB [companyDB]> select p.Pname, Sum(w.Hours) as TotalHours from Project p inner join Works_for w on w.Pno=p.Pnumber group by p.Pname;
+
++-----------------+------------+
+| Pname           | TotalHours |
++-----------------+------------+
+| Al Rabwah       |         50 |
+| Al Rawdah       |         36 |
+| Al Rehab        |         30 |
+| Al Rowad        |         39 |
+| AL Solimaniah   |         10 |
+| Ebad El Rahman  |         22 |
+| Pitcho american |         45 |
++-----------------+------------+
+7 rows in set (0.001 sec)
+
+
+################################################################
+################################################################
+################################################################
+
+#############################    11       ######################
+
+
+MariaDB [companyDB]> select e.Lname  from Employee e inner join Department d on e.SSN=d.MGRSSN where d.MGRSSN not in (select ESSN from Dependent);
++---------+
+| Lname   |
++---------+
+| Shoukry |
+| Ashraf  |
+| Mohamed |
++---------+
+3 rows in set (0.001 sec)
+
+################################################################
+################################################################
+################################################################
+
+#############################    12       ######################
+
+
+
+MariaDB [companyDB]> select d.* from Department d right join Employee e on d.Dnum=e.Dno where e.SSN=( select min(SSN) from Employee);
+
++-------+------+--------+--------------+
+| Dname | Dnum | MGRSSN | MGRStartDate |
++-------+------+--------+--------------+
+| DP2   |   20 | 102672 | 2006-03-01   |
++-------+------+--------+--------------+
+1 row in set (0.001 sec)
+
+################################################################
+################################################################
+################################################################
+
+#############################    13       ######################
+
+
+MariaDB [companyDB]> select e.*,w.Pno from Employee e inner join Works_for w on w.ESSN= e.SSN ;
+
++--------+---------+--------+------------+----------------------------------------+------+--------+----------+------+------+
+| Fname  | Lname   | SSN    | Bdate      | Addresss                               | Sex  | Salary | Superssn | Dno  | Pno  |
++--------+---------+--------+------------+----------------------------------------+------+--------+----------+------+------+
+| Amr    | Shoukry | 102660 | 2002-12-16 | somewhere                              | M    |   NULL | NULL     |   20 |  100 |
+| Amr    | Shoukry | 102660 | 2002-12-16 | somewhere                              | M    |   NULL | NULL     |   20 |  200 |
+| Amr    | Shoukry | 102660 | 2002-12-16 | somewhere                              | M    |   NULL | NULL     |   20 |  300 |
+| Ahmed  | Ali     | 112233 | 1965-01-01 | 15 Ali fahmy St.Giza                   | M    |   1300 | 102660   |   10 |  200 |
+| Noha   | Mohamed | 968574 | 1975-02-01 | 55 Orabi St. El Mohandiseen .Cairo     | F    |   1600 | 321654   |  100 |  400 |
+| Noha   | Mohamed | 968574 | 1975-02-01 | 55 Orabi St. El Mohandiseen .Cairo     | F    |   1600 | 321654   |  100 |  700 |
+| Noha   | Mohamed | 968574 | 1975-02-01 | 55 Orabi St. El Mohandiseen .Cairo     | F    |   1600 | 321654   |  100 |  300 |
+| Mariam | Adel    | 669955 | 1982-06-12 | 269 El-Haram st. Giza                  | F    |    750 | 512463   |   20 |  400 |
+| Amr    | Shoukry | 102660 | 2002-12-16 | somewhere                              | M    |   NULL | NULL     |   20 |  500 |
+| Mariam | Adel    | 669955 | 1982-06-12 | 269 El-Haram st. Giza                  | F    |    750 | 512463   |   20 |  700 |
+| Mariam | Adel    | 669955 | 1982-06-12 | 269 El-Haram st. Giza                  | F    |    750 | 512463   |   20 |  300 |
+| Edward | Hanna   | 512463 | 1972-08-19 | 18 Abaas El 3akaad St. Nasr City.Cairo | M    |   1500 | 321654   |   30 |  500 |
+| Edward | Hanna   | 512463 | 1972-08-19 | 18 Abaas El 3akaad St. Nasr City.Cairo | M    |   1500 | 321654   |   30 |  600 |
+| Maged  | Raoof   | 521634 | 1980-04-06 | 18 Kholosi st.Shobra.Cairo             | M    |   1000 | 968574   |   30 |  500 |
+| Maged  | Raoof   | 521634 | 1980-04-06 | 18 Kholosi st.Shobra.Cairo             | M    |   1000 | 968574   |   30 |  600 |
+| Maged  | Raoof   | 521634 | 1980-04-06 | 18 Kholosi st.Shobra.Cairo             | M    |   1000 | 968574   |   30 |  300 |
+| Maged  | Raoof   | 521634 | 1980-04-06 | 18 Kholosi st.Shobra.Cairo             | M    |   1000 | 968574   |   30 |  400 |
++--------+---------+--------+------------+----------------------------------------+------+--------+----------+------+------+
+17 rows in set (0.001 sec)
+
+
+################################################################
+################################################################
+################################################################
+
