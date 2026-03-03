@@ -1,0 +1,35 @@
+{
+  "library": {
+    "location": "",
+    "description": "",
+    "librarian": "",
+    "books": [
+      {
+        "title": "",
+        "isbn": "",
+        "author": "",
+        "preface": "",
+        "status": {
+          "available": null,
+          "shelf": ""
+        },
+        "parts": [
+          {
+            "part_title": "",
+            "chapters": [
+              {
+                "chapter_title": "",
+                "summary": "",
+                "sections": [
+                  {
+                    "paragraphs": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

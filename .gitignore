@@ -31,3 +31,6 @@ nbproject/private/
 # logs
 *.log
 
+/13.java/xml-test2/target/
+/13.java/jsonHandling/target/
+/13.java/json-p/target/

@@ -1,0 +1,17 @@
+{
+  "location": "New York",
+  "description": "City Central Library",
+  "librarian": "Sarah Johnson",
+  "books": [
+    {
+      "title": "Java Basics",
+      "isbn": "111-ABC",
+      "author": "John Smith"
+    },
+    {
+      "title": "Advanced Java",
+      "isbn": "222-DEF",
+      "author": "Emily Brown"
+    }
+  ]
+}
