@@ -40,10 +40,13 @@ const badgeColorCustimizer = ((tag) => {
     <h1 class="card-title font-bold">{{product.name}}</h1> 
     <div v-if="product.badge" class="badge badge-primary badge-soft">{{product.badge}}</div>
     <br>
-    <h3 class="font-bold">Description</h3>
     <p>{{product.description}}</p>
-    <br><br>
+<div class="flex flex-wrap gap-2 mt-3">
+      <div v-for="tag in product.tags" class="badge inline-block" :class="badgeColorCustimizer(tag)">{{tag}}</div>
+    </div>
+
     <div v-if="HasDiscount">
+    <br><br>
         <pre class="font-bold text-xl"> <del class="text-base-content/50 text-error">{{product.price}}</del> {{priceAfterDiscount}}$</pre>
     </div>
     <div v-else class="font-bold text-xl">{{product.price}} $</div>
@@ -51,10 +54,7 @@ const badgeColorCustimizer = ((tag) => {
       <div class="card-actions ">
        <button class="btn btn-primary px-7">Buy</button>
       </div>
-    <div class="flex flex-wrap gap-2 mt-3">
-      <div v-for="tag in product.tags" class="badge inline-block" :class="badgeColorCustimizer(tag)">{{tag}}</div>
-    </div>
-
+    
       </div>
 </div>
 </template>
