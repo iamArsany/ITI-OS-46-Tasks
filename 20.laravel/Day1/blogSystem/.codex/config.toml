@@ -1,0 +1,4 @@
+[mcp_servers.laravel-boost]
+command = "php"
+args = ["artisan", "boost:mcp"]
+cwd = "/home/miles/Desktop/Programs/ITI/20.laravel/Day1/blogSystem"
